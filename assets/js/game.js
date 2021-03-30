@@ -1,13 +1,21 @@
 class Game {
     constructor() {
-        console.log("Hallo Game");
 
-        this.update()
-        this.draw();
+        // Gameloop
+        let lastTime;
+        const callback = (milliseconds) => {
+            if(lastTime){
+                this.update( (milliseconds - lastTime) / 1000);
+                this.draw();
+            }
+            lastTime = milliseconds;
+            window.requestAnimFrame(callback);
+        }
+        callback();
     }
 
-    update() {
-
+    update(deltatime) {
+        
     }
     draw() {
 
