@@ -22,9 +22,21 @@ class Game {
 
     update(deltatime) {
 
+        this.ball.position.x += this.ball.velocity.x * deltatime;
+        this.ball.position.y += this.ball.velocity.y * deltatime;
+
+        if (this.ball.bottom > this.canvas.height || this.ball.top < 0) {
+            this.ball.velocity.y = -this.ball.velocity.y;
+        }
+        if (this.ball.right > this.canvas.width || this.ball.left < 0) {
+            this.ball.velocity.x = -this.ball.velocity.x;
+        }
     }
 
     draw() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        //bal tekenen
         this.drawRectangle(this.context, this.ball)
 
     }
