@@ -7,6 +7,39 @@ class Game {
         // ball object aanmaken
         this.ball = new Ball(this.canvas.width/2, this.canvas.height/2, 'orange');
 
+        this.players = [
+            new Player(20, this.canvas.height/2, 1),
+            new Player(this.canvas.width-20, this.canvas.height/2, 2)
+        ];
+
+        this.keys = [];
+        window.addEventListener('KEY_DOWN', (event) => {
+            console.log(event.detail);
+            switch (event.detail) {
+                case 'ArrowUp': this.keys[38] = true;
+                break;
+                case 38: this.keys[38] = true;
+                break;
+                case 'ArrowDown': this.keys[40] = true;
+                break;
+                case 40: this.keys[40] = true;
+                break;
+            }
+        });
+        window.addEventListener('KEY_UP', (event) => {
+            console.log(event.detail);
+            switch (event.detail) {
+                case 'ArrowUp': this.keys[38] = false;
+                break;
+                case 38: this.keys[38] = false;
+                break;
+                case 'ArrowDown': this.keys[40] = false;
+                break;
+                case 40: this.keys[40] = false;
+                break;
+            }
+        });
+
         // Gameloop
         let lastTime;
         const callback = (milliseconds) => {
@@ -20,10 +53,28 @@ class Game {
         callback();
     }
 
+    checkInput(player, ball) {
+        switch(player.id) {
+            case 1:     // Human player (links)
+                        player.velocity.y  = 0;
+                        player.velocity.y += (this.keys[38]===true) ? -400 : 0;
+                        player.velocity.y += (this.keys[40]===true) ?  400 : 0;
+            break;
+            case 2:     // Computer player (rechts)
+                        player.position.y = ball.position.y;
+            break;    
+        }
+    }
+
     update(deltatime) {
 
         this.ball.position.x += this.ball.velocity.x * deltatime;
         this.ball.position.y += this.ball.velocity.y * deltatime;
+
+        this.players[0].position.y += this.players[0].velocity.y * deltatime; 
+        this.players[1].position.y += this.players[1].velocity.y * deltatime;
+
+        this.players.forEach(player => this.checkInput(player, this.ball));
 
         if (this.ball.bottom > this.canvas.height || this.ball.top < 0) {
             this.ball.velocity.y = -this.ball.velocity.y;
@@ -38,6 +89,10 @@ class Game {
 
         //bal tekenen
         this.drawRectangle(this.context, this.ball)
+
+        for(let i=0; i<this.players.length; i++) {
+            this.drawRectangle(this.context, this.players[i]);
+        }
 
     }
 
