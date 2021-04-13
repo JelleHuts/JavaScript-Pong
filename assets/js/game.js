@@ -7,12 +7,18 @@ class Game {
         // ball object aanmaken
         this.ball = new Ball(this.canvas.width/2, this.canvas.height/2, 'orange');
 
+        //Maak twee spelers aan en doe ze in een array
         this.players = [
             new Player(20, this.canvas.height/2, 1),
             new Player(this.canvas.width-20, this.canvas.height/2, 2)
         ];
 
+        // Maak een hud aan voor de randen en de score
+        this.hud = new Hud(this);
+
+        //Maak een array voor de toetsen aan
         this.keys = [];
+        //Vang een event op voor toets ingedrukt
         window.addEventListener('KEY_DOWN', (event) => {
             console.log(event.detail);
             switch (event.detail) {
@@ -26,6 +32,8 @@ class Game {
                 break;
             }
         });
+
+        //Vang event op voor toets losgelaten
         window.addEventListener('KEY_UP', (event) => {
             console.log(event.detail);
             switch (event.detail) {
@@ -40,7 +48,7 @@ class Game {
             }
         });
 
-        // Gameloop
+        // Gameloop aanmaken
         let lastTime;
         const callback = (milliseconds) => {
             if(lastTime){
