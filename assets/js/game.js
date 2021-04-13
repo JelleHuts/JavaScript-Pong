@@ -84,13 +84,46 @@ class Game {
 
         this.players.forEach(player => this.checkInput(player, this.ball));
 
-        if (this.ball.bottom > this.canvas.height || this.ball.top < 0) {
+        this.checkCollisions(this.players, this.ball, this.hud.edges, deltatime)
+    }   
+
+    checkCollisions(players, ball, edges, deltatime){
+        for(let p=0; p<players.length; p++){
+            if(players[p].top < edges[0].bottom) {
+                players[p].position.y = edges[0].size.y + (players[p].size.y/2);
+            }else if(players[p].bottom > edges[1].top) {
+                players[p].position.y = this.canvas.height - edges[1].size.y - (players[p].size.y/2);
+            }
+        }
+
+        //Bal boven en beneden tegenhouden
+        if (this.ball.bottom > this.canvas.height-10 || this.ball.top < 10) {
             this.ball.velocity.y = -this.ball.velocity.y;
         }
-        if (this.ball.right > this.canvas.width || this.ball.left < 0) {
+
+        if(this.collide(ball, players[0], deltatime)) {
             this.ball.velocity.x = -this.ball.velocity.x;
         }
+        if(this.collide(ball, players[1], deltatime)) {
+            this.ball.velocity.x = -this.ball.velocity.x;
+        }
+       
     }
+
+        collide(rect1, rect2, dt) {
+            if (rect1.left   + rect1.velocity.x * dt < rect2.right  + rect2.velocity.x * dt &&
+                rect1.right  + rect1.velocity.x * dt > rect2.left   + rect2.velocity.x * dt &&
+                rect1.top    + rect1.velocity.y * dt < rect2.bottom + rect2.velocity.y * dt &&
+                rect1.bottom + rect1.velocity.y * dt > rect2.top    + rect2.velocity.y * dt) {
+                return true;
+            }else if (rect2.left   + rect2.velocity.x * dt < rect1.right  + rect1.velocity.x * dt &&
+                    rect2.right  + rect2.velocity.x * dt > rect1.left   + rect1.velocity.x * dt &&
+                    rect2.top    + rect2.velocity.y * dt < rect1.bottom + rect1.velocity.y * dt &&
+                    rect2.bottom + rect2.velocity.y * dt > rect1.top    + rect1.velocity.y * dt) {
+                
+                return false;
+            }
+        }
 
     draw() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
