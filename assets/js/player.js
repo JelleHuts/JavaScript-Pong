@@ -5,5 +5,9 @@ class Player extends Rectangle
         this.id = id;
         this.color = color;
         this.score = 0;
+        if(id === 2) {
+            this.locked = false;
+            this.stickyFrames = 0;
+        }
     }
 }
